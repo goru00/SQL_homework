@@ -1,5 +1,5 @@
 CREATE DATABASE WORKGROUP;
-USE SOSAMBA;
+USE WORKGROUP;
 CREATE TABLE `Издательства` (
 	`Код издательства` INT PRIMARY KEY,
 	`Название издательства` VARCHAR(60) NOT NULL,
