@@ -48,7 +48,7 @@ CREATE TABLE `Изделие` (
     `Длина` INT NOT NULL,
     `Изображение` VARCHAR(100),
     `Комментарий` VARCHAR(80) 
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE `Фурнитура изделия` (
     `Артикул фурнитуры` CHAR(20) NOT NULL,
