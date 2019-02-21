@@ -2,18 +2,18 @@ CREATE DATABASE LAB;
 USE LAB;
 
 CREATE TABLE `Фурнитура` (
-    `Артикул` CHAR(25) NOT NULL PRIMARY KEY,
+    `Артикул` VARCHAR(20) NOT NULL PRIMARY KEY,
     `Наименование` VARCHAR(30) NOT NULL,
     `Тип` VARCHAR(15) NOT NULL,
     `Ширина` INT NOT NULL,
     `Длина` INT,
     `Вес` INT,
     `Изображение` VARCHAR(100),
-    `Цена` INT NOT NULL
+    `Цена` FLOAT NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Ткань` (
-    `Артикул` CHAR(20) NOT NULL PRIMARY KEY,
+    `Артикул` VARCHAR(20) NOT NULL PRIMARY KEY,
     `Наименование` VARCHAR(30) NOT NULL,
     `Цвет` VARCHAR(15),
     `Рисунок` VARCHAR(15),
@@ -21,20 +21,20 @@ CREATE TABLE `Ткань` (
     `Состав` VARCHAR(25),
     `Ширина` INT NOT NULL,
     `Длина` INT NOT NULL,
-    `Цена` INT NOT NULL
+    `Цена` FLOAT NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Склад фурнитуры` (
-    `Партия` CHAR(25) NOT NULL,
-    `Артикул фурнитуры` CHAR(25) NOT NULL,
+    `Партия` INT NOT NULL AUTO_INCREMENT,
+    `Артикул фурнитуры` VARCHAR(25) NOT NULL,
     PRIMARY KEY(`Партия`, `Артикул фурнитуры`),
     `Количество` INT NOT NULL,
     FOREIGN KEY (`Артикул фурнитуры`) REFERENCES `Фурнитура`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Склад ткани` (
-    `Рулон` CHAR(25) NOT NULL,
-    `Артикул ткани` CHAR(25) NOT NULL,
+    `Рулон` INT NOT NULL AUTO_INCREMENT,
+    `Артикул ткани` VARCHAR(25) NOT NULL,
     PRIMARY KEY(`Рулон`, `Артикул ткани`),
     `Ширина` INT NOT NULL,
     `Длина` INT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `Склад ткани` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Изделие` (
-    `Артикул` CHAR(25) NOT NULL PRIMARY KEY,
+    `Артикул` VARCHAR(20) NOT NULL PRIMARY KEY,
     `Наименование` VARCHAR(30) NOT NULL,
     `Ширина` INT NOT NULL,
     `Длина` INT NOT NULL,
@@ -51,8 +51,8 @@ CREATE TABLE `Изделие` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Фурнитура изделия` (
-    `Артикул фурнитуры` CHAR(20) NOT NULL,
-    `Артикул изделия` CHAR(25) NOT NULL,
+    `Артикул фурнитуры` VARCHAR(20) NOT NULL,
+    `Артикул изделия` VARCHAR(20) NOT NULL,
     PRIMARY KEY(`Артикул фурнитуры`,`Артикул изделия`),
     `Размещение` VARCHAR(60) NOT NULL,
     `Ширина` INT,
@@ -64,36 +64,36 @@ CREATE TABLE `Фурнитура изделия` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Ткани изделия` (
-    `Артикул ткани` CHAR(25) NOT NULL,
-    `Артикул изделия` CHAR(25) NOT NULL,
+    `Артикул ткани` VARCHAR(20) NOT NULL,
+    `Артикул изделия` VARCHAR(20) NOT NULL,
     PRIMARY KEY(`Артикул ткани`, `Артикул изделия`),
     FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE,
     FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Пользователь` (
-    `Логин` CHAR(30) NOT NULL,
-    `Пароль` CHAR(30) NOT NULL,
+    `Логин` VARCHAR(30) NOT NULL,
+    `Пароль` VARCHAR(30) NOT NULL,
     PRIMARY KEY(`Логин`, `Пароль`),
     `Роль` VARCHAR(15) NOT NULL,
     `Наименование` VARCHAR(25)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Заказ` (
-    `Номер` CHAR(20) NOT NULL,
-    `Дата` CHAR(10) NOT NULL,
+    `Номер` INT NOT NULL AUTO_INCREMENT,
+    `Дата` DATE NOT NULL,
     PRIMARY KEY(`Номер`, `Дата`),
     `Этап выполнения` CHAR(20) NOT NULL,
     `Заказчик` VARCHAR(25) NOT NULL,
     `Менеджер` VARCHAR(25),
-    `Стоимость` INT,
+    `Стоимость` FLOAT,
     FOREIGN KEY (`Заказчик`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE,
     FOREIGN KEY (`Менеджер`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Заказанные изделия` (
-    `Артикул изделия` CHAR(25) NOT NULL,
-    `Номер заказа` CHAR(20) NOT NULL, 
+    `Артикул изделия` VARCHAR(25) NOT NULL,
+    `Номер заказа` VARCHAR(20) NOT NULL, 
     PRIMARY KEY(`Артикул изделия`, `Номер заказа`),
     `Количество` INT NOT NULL,
     FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE,
