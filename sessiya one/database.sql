@@ -29,7 +29,7 @@ CREATE TABLE `Склад фурнитуры` (
     `Артикул фурнитуры` CHAR(25) NOT NULL,
     PRIMARY KEY(`Партия`, `Артикул фурнитуры`),
     `Количество` INT NOT NULL,
-    FOREIGN KEY (`Артикул фурнитуры`) REFERENCES `Фурнитура`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Артикул фурнитуры`) REFERENCES `Фурнитура`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Склад ткани` (
@@ -38,7 +38,7 @@ CREATE TABLE `Склад ткани` (
     PRIMARY KEY(`Рулон`, `Артикул ткани`),
     `Ширина` INT NOT NULL,
     `Длина` INT NOT NULL,
-    FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Изделие` (
@@ -59,16 +59,16 @@ CREATE TABLE `Фурнитура изделия` (
     `Длина` INT,
     `Поворот` INT,
     `Количество` INT NOT NULL,
-    FOREIGN KEY (`Артикул фурнитуры`) REFERENCES `Фурнитура`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Артикул фурнитуры`) REFERENCES `Фурнитура`(`Артикул`) ON UPDATE CASCADE,
+    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Ткани изделия` (
     `Артикул ткани` CHAR(25) NOT NULL,
     `Артикул изделия` CHAR(25) NOT NULL,
     PRIMARY KEY(`Артикул ткани`, `Артикул изделия`),
-    FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE,
+    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Пользователь` (
@@ -76,8 +76,7 @@ CREATE TABLE `Пользователь` (
     `Пароль` CHAR(30) NOT NULL,
     PRIMARY KEY(`Логин`, `Пароль`),
     `Роль` VARCHAR(15) NOT NULL,
-    `Наименование` VARCHAR(25),
-    UNIQUE INDEX `Логин_Пароль` (`Логин`, `Пароль`)
+    `Наименование` VARCHAR(25)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Заказ` (
@@ -88,8 +87,8 @@ CREATE TABLE `Заказ` (
     `Заказчик` VARCHAR(25) NOT NULL,
     `Менеджер` VARCHAR(25),
     `Стоимость` INT,
-    FOREIGN KEY (`Заказчик`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`Менеджер`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Заказчик`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE,
+    FOREIGN KEY (`Менеджер`) REFERENCES `Пользователь`(`Логин`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Заказанные изделия` (
@@ -97,8 +96,8 @@ CREATE TABLE `Заказанные изделия` (
     `Номер заказа` CHAR(20) NOT NULL, 
     PRIMARY KEY(`Артикул изделия`, `Номер заказа`),
     `Количество` INT NOT NULL,
-    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`Номер заказа`) REFERENCES `Заказ`(`Номер`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE,
+    FOREIGN KEY (`Номер заказа`) REFERENCES `Заказ`(`Номер`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 
