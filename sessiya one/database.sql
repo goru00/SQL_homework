@@ -2,7 +2,7 @@ CREATE DATABASE LAB;
 USE LAB;
 CREATE TABLE `Изделие` (
     `Артикул` VARCHAR(20) NOT NULL PRIMARY KEY,
-    `Наименование` VARCHAR(30) NOT NULL,
+    `Наименование` VARCHAR(53) NOT NULL,
     `Ширина` INT NOT NULL,
     `Длина` INT NOT NULL,
     `Изображение` VARCHAR(100),
@@ -54,8 +54,8 @@ CREATE TABLE `Склад ткани` (
     `Рулон` INT NOT NULL AUTO_INCREMENT,
     `Артикул ткани` VARCHAR(25) NOT NULL,
     PRIMARY KEY(`Рулон`, `Артикул ткани`),
-    `Ширина` INT NOT NULL,
-    `Длина` INT NOT NULL,
+    `Ширина` FLOAT NOT NULL,
+    `Длина` FLOAT NOT NULL,
     FOREIGN KEY (`Артикул ткани`) REFERENCES `Ткань`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -71,8 +71,8 @@ CREATE TABLE `Фурнитура` (
     `Артикул` VARCHAR(20) NOT NULL PRIMARY KEY,
     `Наименование` VARCHAR(30) NOT NULL,
     `Тип` VARCHAR(15) NOT NULL,
-    `Ширина` INT NOT NULL,
-    `Длина` INT,
+    `Ширина` FLOAT NOT NULL,
+    `Длина` FLOAT,
     `Вес` INT,
     `Изображение` VARCHAR(100),
     `Цена` FLOAT NOT NULL
@@ -99,11 +99,23 @@ CREATE TABLE `Фурнитура изделия` (
     FOREIGN KEY (`Артикул изделия`) REFERENCES `Изделие`(`Артикул`) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-LOAD DATA INFILE "C:\\test.csv"
+LOAD DATA INFILE "C:\\tkani.csv"
 INTO TABLE `Ткань`
 COLUMNS TERMINATED BY ';'
 OPTIONALLY ENCLOSED BY ""
 ESCAPED BY ""
 LINES TERMINATED BY '\r\n';
 
+LOAD DATA INFILE "C:\\izdeliya.csv"
+INTO TABLE `Изделие`
+COLUMNS TERMINATED BY ';'
+OPTIONALLY ENCLOSED BY ""
+ESCAPED BY ""
+LINES TERMINATED BY '\r\n';
 
+LOAD DATA INFILE "C:\\furnitura.csv"
+INTO TABLE `Фурнитура`
+COLUMNS TERMINATED BY ';'
+OPTIONALLY ENCLOSED BY ""
+ESCAPED BY ""
+LINES TERMINATED BY '\r\n';
