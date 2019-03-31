@@ -76,15 +76,15 @@ SELECT `Авторы`.`ФИО автора`, `Книги`.`Название кн
 (( `Авторы` INNER JOIN `Книги` ON `Авторы`.`Порядковый № автора`=`Книги`.`Порядковый № автора`) INNER JOIN
 `Издательства` ON `Книги`.`Порядковый № издательства`=`Издательства`.`Порядковый № издательства`);
 
-GRANT ALL PRIVILEGES ON `LAB2`.* TO
-'director'@'localhost';
-REVOKE CREATE ON `LAB2`.* FROM
-'director'@'localhost';
+GRANT SELECT ON `LAB2`.`Просмотр` TO
+'visitor'@'localhost';
 
 FLUSH PRIVILEGES;
 
-GRANT SELECT ON `LAB2`.`Просмотр` TO
-'visitor'@'localhost';
+GRANT ALL PRIVILEGES ON `LAB2`.* TO
+'director'@'localhost';
+REVOKE CREATE, ALTER ON `LAB2`.* FROM
+'director'@'localhost';
 
 FLUSH PRIVILEGES;
 
