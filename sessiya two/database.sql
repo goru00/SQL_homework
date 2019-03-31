@@ -14,6 +14,8 @@ GRANT ALL PRIVILEGES ON *.* TO
 REVOKE CREATE, ALTER, DROP, UPDATE ON *.* FROM
 'administrator'@'localhost';
 
+FLUSH PRIVILEGES;
+
 DROP DATABASE LAB2;
 
 CREATE DATABASE LAB2;
@@ -79,8 +81,12 @@ GRANT ALL PRIVILEGES ON `LAB2`.* TO
 REVOKE CREATE ON `LAB2`.* FROM
 'director'@'localhost';
 
+FLUSH PRIVILEGES;
+
 GRANT SELECT ON `LAB2`.`Просмотр` TO
 'visitor'@'localhost';
+
+FLUSH PRIVILEGES;
 
 GRANT UPDATE, INSERT, SELECT ON `LAB2`.`Книги` TO
 'worker'@'localhost';
