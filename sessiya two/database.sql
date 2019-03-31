@@ -74,16 +74,21 @@ SELECT `Авторы`.`ФИО автора`, `Книги`.`Название кн
 (( `Авторы` INNER JOIN `Книги` ON `Авторы`.`Порядковый № автора`=`Книги`.`Порядковый № автора`) INNER JOIN
 `Издательства` ON `Книги`.`Порядковый № издательства`=`Издательства`.`Порядковый № издательства`);
 
+GRANT ALL PRIVILEGES ON `LAB2`.* TO
+'director'@'localhost';
+REVOKE CREATE ON `LAB2`.* FROM
+'director'@'localhost';
+
 GRANT SELECT ON `LAB2`.`Просмотр` TO
 'visitor'@'localhost';
 
 GRANT UPDATE, INSERT, SELECT ON `LAB2`.`Книги` TO
 'worker'@'localhost';
-REVOKE UPDATE `Цена` ON TABLE `LAB2`.`Книги` FROM
+REVOKE UPDATE(`Цена`) ON `LAB2`.`Книги` FROM
 'worker'@'localhost';
 GRANT SELECT, INSERT ON `LAB2`.`Авторы` TO
 'worker'@'localhost';
-GRANT UPDATE, SELECT `Порядковый № автора` ON TABLE `LAB2`.`Авторы` TO
+GRANT UPDATE(`Порядковый № автора`) ON `LAB2`.`Авторы` TO
 'worker'@'localhost';
 GRANT INSERT, SELECT, UPDATE, DELETE ON `LAB2`.`Издательства` TO
 'worker'@'localhost';
