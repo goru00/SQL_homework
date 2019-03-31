@@ -4,16 +4,24 @@ DROP USER 'director'@'localhost';
 DROP USER 'worker'@'localhost';
 DROP USER 'visitor'@'localhost';
 
-CREATE USER 'administrator'@'localhost';
-CREATE USER 'director'@'localhost';
-CREATE USER 'worker'@'localhost';
-CREATE USER 'visitor'@'localhost';
+CREATE USER 'administrator'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'director'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'worker'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'visitor'@'localhost' IDENTIFIED BY 'password';
 
 GRANT ALL PRIVILEGES ON *.* TO
 'administrator'@'localhost';
 REVOKE CREATE, ALTER, DROP *.* FROM
 'administrator'@'localhost';
 
+FLUSH PRIVILEGES;
+
+GRANT INSERT, SELECT, UPDATE ON `Книги`.* TO 
+'worker'@'localhost';
+REVOKE CREATE, SELECT ON `Книги`.`Цена` FROM
+'worker'@'localhost';
+GRANT INSERT, SELECT, UPDATE, DELETE `Издательства`.* TO
+'worker'@'localhost';
 FLUSH PRIVILEGES;
 
 DROP DATABASE LAB2;
