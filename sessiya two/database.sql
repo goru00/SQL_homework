@@ -7,22 +7,12 @@ DROP USER 'visitor'@'localhost';
 CREATE USER 'administrator'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'director'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'worker'@'localhost' IDENTIFIED BY 'password';
-CREATE USER 'visitor'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'visitor'@'localhost';
 
 GRANT ALL PRIVILEGES ON *.* TO
+'administrator'@'localhost' WITH GRANT OPTION;
+REVOKE CREATE, ALTER, DROP, UPDATE ON *.* FROM
 'administrator'@'localhost';
-REVOKE CREATE, ALTER, DROP *.* FROM
-'administrator'@'localhost';
-
-FLUSH PRIVILEGES;
-
-GRANT INSERT, SELECT, UPDATE ON `Книги`.* TO 
-'worker'@'localhost';
-REVOKE CREATE, SELECT ON `Книги`.`Цена` FROM
-'worker'@'localhost';
-GRANT INSERT, SELECT, UPDATE, DELETE `Издательства`.* TO
-'worker'@'localhost';
-FLUSH PRIVILEGES;
 
 DROP DATABASE LAB2;
 
@@ -79,5 +69,29 @@ OPTIONALLY ENCLOSED BY ""
 ESCAPED BY ""
 LINES TERMINATED BY '\r\n';
 
+CREATE VIEW `Просмотр` AS 
+SELECT `Авторы`.`ФИО автора`, `Книги`.`Название книги`, `Издательства`.`Название издательства`, `Издательства`.`Город`, `Книги`.`Год издания`, `Книги`.`Цена` from 
+(( `Авторы` INNER JOIN `Книги` ON `Авторы`.`Порядковый № автора`=`Книги`.`Порядковый № автора`) INNER JOIN
+`Издательства` ON `Книги`.`Порядковый № издательства`=`Издательства`.`Порядковый № издательства`);
 
+GRANT SELECT ON `LAB2`.`Просмотр` TO
+'visitor'@'localhost';
+
+GRANT UPDATE, INSERT, SELECT ON `LAB2`.`Книги` TO
+'worker'@'localhost';
+REVOKE UPDATE `Цена` ON TABLE `LAB2`.`Книги` FROM
+'worker'@'localhost';
+GRANT SELECT, INSERT ON `LAB2`.`Авторы` TO
+'worker'@'localhost';
+GRANT UPDATE, SELECT `Порядковый № автора` ON TABLE `LAB2`.`Авторы` TO
+'worker'@'localhost';
+GRANT INSERT, SELECT, UPDATE, DELETE ON `LAB2`.`Издательства` TO
+'worker'@'localhost';
+
+FLUSH PRIVILEGES;
+
+SHOW GRANTS FOR 'administrator'@'localhost';
+SHOW GRANTS FOR 'director'@'localhost';
+SHOW GRANTS FOR 'worker'@'localhost';
+SHOW GRANTS FOR 'visitor'@'localhost';
 
