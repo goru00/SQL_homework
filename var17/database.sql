@@ -78,7 +78,7 @@ GRANT SELECT, INSERT ON `VAR17`.`Гонщики` TO
 'worker'@'localhost';
 GRANT UPDATE(`ФИО водителя`) ON `VAR17`.`Гонщики` TO
 'worker'@'localhost';
-GRANT UPDATE(`Время прохождения трассы, мин`) ON `VAR17`.`Распределение мест` TO
+GRANT SELECT, INSERT(`Время прохождения трассы, мин`) ON `VAR17`.`Распределение мест` TO
 'worker'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON `VAR17`.`Распределение мест` TO
 'worker'@'localhost';
