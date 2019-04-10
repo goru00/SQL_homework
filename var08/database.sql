@@ -100,3 +100,8 @@ GRANT SELECT ON `VAR08`.`Просмотр` TO
 'visitor'@'localhost';
 
 FLUSH PRIVILEGES;
+
+SHOW GRANTS FOR 'administrator'@'localhost';
+SHOW GRANTS FOR 'dean'@'localhost';
+SHOW GRANTS FOR 'worker'@'localhost';
+SHOW GRANTS FOR 'visitor'@'localhost';
