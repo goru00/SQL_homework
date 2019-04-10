@@ -9,7 +9,7 @@ CREATE USER 'director'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'worker'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'visitor'@'localhost';
 
-GRANT ALL PRIVILEGES ON *.* TO
+GRANT ALL PRIVILEGES ON `VAR11`.* TO
 'administrator'@'localhost' WITH GRANT OPTION;
 REVOKE CREATE, DROP ON *.* FROM
 'administrator'@'localhost'; 
@@ -67,7 +67,7 @@ LINES TERMINATED BY '\r\n';
 
 GRANT ALL PRIVILEGES ON *.* TO
 'director'@'localhost' WITH GRANT OPTION;
-REVOKE CREATE ON *.* FROM
+REVOKE CREATE, DELETE, ALTER, DROP ON *.* FROM
 'director'@'localhost';
 GRANT ALL PRIVILEGES ON `VAR11`.* TO
 'director'@'localhost';
