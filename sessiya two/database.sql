@@ -60,8 +60,12 @@ CREATE TABLE `Книги` (
     `Порядковый № издательства` INT NOT NULL,
     `Год издания` INT NOT NULL,
     `Цена` INT NOT NULL,
-	FOREIGN KEY (`Порядковый № автора`) REFERENCES `Авторы` (`Порядковый № автора`) ON DELETE NO ACTION ON UPDATE CASCADE,
-	FOREIGN KEY (`Порядковый № издательства`) REFERENCES `Издательства`(`Порядковый № издательства`) ON DELETE NO ACTION ON UPDATE CASCADE
+	FOREIGN KEY (`Порядковый № автора`) REFERENCES `Авторы` (`Порядковый № автора`) 
+    ON DELETE NO ACTION 
+    ON UPDATE CASCADE,
+	FOREIGN KEY (`Порядковый № издательства`) REFERENCES `Издательства`(`Порядковый № издательства`) 
+    ON DELETE NO ACTION 
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 LOAD DATA INFILE "C:\\Knigi.csv" IGNORE
