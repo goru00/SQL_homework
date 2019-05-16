@@ -16,10 +16,12 @@ CREATE TABLE `Дом` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Арендатор` (
-	`№ квартиры` INT NOT NULL,
+	`Порядковый № дома` INT NOT NULL,
+		`№ квартиры` INT NOT NULL,
 	`Фамилия, имя и отчество квартиросъемщика` VARCHAR(36) NOT NULL,
 	`Наличие электроплиты` VARCHAR(3) NOT NULL,
-	PRIMARY KEY(`№ квартиры`)
+	PRIMARY KEY(`Порядковый № дома`,`№ квартиры`),
+	FOREIGN KEY (`Порядковый № дома`) REFERENCES `Дом`(`Порядковый № дома`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Показание счетчиков` (
@@ -28,10 +30,7 @@ CREATE TABLE `Показание счетчиков` (
 	`Месяц` INT NOT NULL,
 	`День` INT NOT NULL,
 	`Ночь` INT NOT NULL,
-	CONSTRAINT FOREIGN KEY (`Порядковый № дома`) REFERENCES `Арендатор`(`№ квартиры`) 
-	ON DELETE NO ACTION 
-	ON UPDATE CASCADE,
-	CONSTRAINT FOREIGN KEY (`№ квартиры`) REFERENCES `Дом`(`Порядковый № дома`) 
+	CONSTRAINT FOREIGN KEY (`Порядковый № дома`,`№ квартиры`) REFERENCES `Арендатор`(`Порядковый № дома`,`№ квартиры`) 
 	ON DELETE NO ACTION 
 	ON UPDATE CASCADE
 ) ENGINE=InnoDB;
