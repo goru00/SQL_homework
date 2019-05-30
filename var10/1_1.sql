@@ -21,6 +21,8 @@ CREATE DATABASE VAR10;
 
 USE VAR10;
 
+SET foreign_key_checks = 0;
+
 DROP TABLE IF EXISTS `Экземпляры книг`;
 DROP TABLE IF EXISTS `Книги`;
 DROP TABLE IF EXISTS `Читательские билеты`;
@@ -33,7 +35,7 @@ CREATE TABLE `Читательские билеты` (
     PRIMARY KEY(`№ читательского билета`)
 ) ENGINE=InnoDB;
 
-LOAD DATA INFILE "C:\\Redactor.csv" IGNORE
+LOAD DATA INFILE "C:\\Users\\Student\\Desktop\\workdesk\\SQL_homework\\var10\\LibRead.csv" IGNORE
 INTO TABLE `Читательские билеты`
 COLUMNS TERMINATED BY ';'
 OPTIONALLY ENCLOSED BY ""
@@ -49,7 +51,7 @@ CREATE TABLE `Книги` (
     PRIMARY KEY(`ISBN`)
 ) ENGINE=InnoDB;
 
-LOAD DATA INFILE "C:\\Redactor.csv" IGNORE
+LOAD DATA INFILE "C:\\Users\\Student\\Desktop\\workdesk\\SQL_homework\\var10\\Book.csv" IGNORE
 INTO TABLE `Книги`
 COLUMNS TERMINATED BY ';'
 OPTIONALLY ENCLOSED BY ""
@@ -69,7 +71,7 @@ CREATE TABLE `Экземпляры книг` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-LOAD DATA INFILE "C:\\Redactor.csv" IGNORE
+LOAD DATA INFILE "C:\\Users\\Student\\Desktop\\workdesk\\SQL_homework\\var10\\ExBook.csv" IGNORE
 INTO TABLE `Экземпляры книг`
 COLUMNS TERMINATED BY ';'
 OPTIONALLY ENCLOSED BY ""
