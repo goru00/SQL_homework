@@ -21,7 +21,7 @@ CREATE TABLE `Классы` (
 	`Табельный № учителя` INT NOT NULL,
 	`Специализация класса` VARCHAR(50) NOT NULL,
 	`Классная комната` INT NOT NULL,
-	FOREIGN KEY(`Табельный № учителя`) REFERENCES `Работники школы`(`Табельный № учителя`) 
+	CONSTRAINT FOREIGN KEY(`Табельный № учителя`) REFERENCES `Работники школы`(`Табельный № учителя`) 
 	ON DELETE NO ACTION 
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
@@ -31,7 +31,7 @@ CREATE TABLE `Школьники` (
 	`Порядковый № в журнале` INT NOT NULL,
 	`ФИО школьника` VARCHAR(50) NOT NULL,
 	`Пол` VARCHAR(3) NOT NULL,
-	FOREIGN KEY(`№ класса`) REFERENCES `Классы`(`№ класса`) 
+	CONSTRAINT FOREIGN KEY(`№ класса`) REFERENCES `Классы`(`№ класса`) 
 	ON DELETE NO ACTION 
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
