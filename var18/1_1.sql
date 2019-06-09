@@ -85,16 +85,16 @@ INSERT INTO `Спортсмены`
     (1006, 'Фролов Артур', '2008-12-31', 'Н'),
     (1007, 'Федорова Ирина', '2009-09-12', 'Б'),
     (1008, 'Симонова Света', '2008-06-22', 'Б');
-
-GRANT INSERT, SELECT, UPDATE ON `LAB2`.`Тренеры спортивной школы` TO
-'worker'@'localhost';
-REVOKE UPDATE(`Оклад,руб`) ON `LAB2`.`Тренеры спортивной школы` FROM
-'worker'@'localhost'; /* NOT FIX */
+ 
 GRANT INSERT, SELECT ON `LAB2`.`Спортивные секции` TO
 'worker'@'localhost';
 GRANT UPDATE(`Табельный № тренера`) ON `LAB2`.`Спортивные секции` TO
 'worker'@'localhost';
 GRANT INSERT, SELECT, UPDATE, DELETE ON `LAB2`.`Спортсмены` TO
+'worker'@'localhost';
+GRANT INSERT, UPDATE, SELECT ON `LAB2`.`Тренеры спортивной школы` TO
+'worker'@'localhost';
+REVOKE UPDATE(`Оклад,руб`) ON `LAB2`.`Тренеры спортивной школы` FROM
 'worker'@'localhost';
 
 FLUSH PRIVILEGES;
