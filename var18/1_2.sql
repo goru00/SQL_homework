@@ -2,6 +2,8 @@
 CREATE DATABASE `LAB3` COLLATE 'utf8_unicode_ci';
 USE `LAB3`;
 
+SET foreign_key_checks = 0;
+
 CREATE TABLE `Авторы` (
 	`Порядковый №` INT NOT NULL AUTO_INCREMENT,
 	`ФИО автора` VARCHAR(64) NOT NULL,
@@ -25,8 +27,8 @@ CREATE TABLE `Книги` (
 	`Год издания` YEAR NOT NULL,
 	`Цена` INT NOT NULL,
 	PRIMARY KEY (`ISBN`),
-	CONSTRAINT `FK__авторы` FOREIGN KEY (`№ автора`) REFERENCES `авторы` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT `FK__издательства` FOREIGN KEY (`№ издательства`) REFERENCES `издательства` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY (`№ автора`) REFERENCES `авторы` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`№ издательства`) REFERENCES `издательства` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `Книги1` (
@@ -37,29 +39,29 @@ CREATE TABLE `Книги1` (
 	`Год издания` YEAR NOT NULL,
 	`Цена` INT NOT NULL,
 	PRIMARY KEY (`ISBN`),
-	CONSTRAINT `FK__авторы1` FOREIGN KEY (`№ автора`) REFERENCES `авторы` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT `FK__издательства1` FOREIGN KEY (`№ издательства`) REFERENCES `издательства` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY (`№ автора`) REFERENCES `авторы` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`№ издательства`) REFERENCES `издательства` (`Порядковый №`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 /* 3. Заполнение данных */
 
-INSERT INTO `авторы` (`Порядковый №`, `ФИО автора`, `Пол`, `Дата рождения`) VALUES
+INSERT INTO `Авторы` (`Порядковый №`, `ФИО автора`, `Пол`, `Дата рождения`) VALUES
 	(1001, 'Иванов Сергей Степанович', 'М', '1963-09-22'),
 	(1002, 'Сидорова Ольга Юрьевна', 'Ж', '1956-11-02'),
 	(1003, 'Петров Иван Петрович', 'М', '1972-02-23'),
 	(1004, 'Федоров Юрий Владимирович', 'М', '1954-08-11');
 
-INSERT INTO `издательства` (`Порядковый №`, `Название издательства`, `Город`) VALUES
+INSERT INTO `Издательства` (`Порядковый №`, `Название издательства`, `Город`) VALUES
 	(101, 'Питер', 'Петербург'),
 	(102, 'Лори', 'Москва'),
 	(103, 'БХВ-Петербург', 'Петербург');
 
-INSERT INTO `книги` (`ISBN`, `№ автора`, `Название книги`, `№ издательства`, `Год издания`, `Цена`) VALUES
+INSERT INTO `Книги` (`ISBN`, `№ автора`, `Название книги`, `№ издательства`, `Год издания`, `Цена`) VALUES
 	('758-3-004-87105', 1002, 'Сопромат', 103, '2013', 350),
 	('978-5-388-00003', 1001, 'Самоучитель JAVA', 101, '2012', 300),
 	('978-5-699-58103', 1001, 'JAVA за 21 день', 102, '2013', 600);
 
-INSERT INTO `книги1` (`ISBN`, `№ автора`, `Название книги`, `№ издательства`, `Год издания`, `Цена`) VALUES
+INSERT INTO `Книги1` (`ISBN`, `№ автора`, `Название книги`, `№ издательства`, `Год издания`, `Цена`) VALUES
 	('675-3-423-00375', 1003, 'Физика', 102, '2013', 450),
 	('758-3-057-37854', 1002, 'Механика', 103, '2011', 270);
 
