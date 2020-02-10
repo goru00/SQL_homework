@@ -8,6 +8,7 @@ USE work_1;
 DROP TABLE IF EXISTS `Авторы`;
 DROP TABLE IF EXISTS `Книги`;
 DROP TABLE IF EXISTS `Заказы`;
+DROP TABLE IF EXISTS `Доставка`;
 CREATE TABLE `Авторы` (
 	`№ автора` INT NOT NULL,
 	`ФИО автора` VARCHAR(36) NOT NULL,
