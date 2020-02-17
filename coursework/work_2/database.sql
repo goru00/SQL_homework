@@ -1,11 +1,11 @@
 DROP DATABASE work_2;
 CREATE DATABASE work_2;
 
-USE work_1;
-DROP TABLE IF EXISTS `Марки автомобилей`;
-DROP TABLE IF EXISTS `Водители`;
-DROP TABLE IF EXISTS `Поездки`;
+USE work_2;
 DROP TABLE IF EXISTS `Поездки1`;
+DROP TABLE IF EXISTS `Поездки`;
+DROP TABLE IF EXISTS `Водители`;
+DROP TABLE IF EXISTS `Марки автомобилей`;
 CREATE TABLE `Марки автомобилей` (
 	`Модель автомобиля` CHAR(35) NOT NULL,
 	`Минуты простоя` INT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `Водители` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
 	`ФИО Водителя` VARCHAR(36) NOT NULL,
 	`Телефон` CHAR(16) NOT NULL,
-	`Модель автомобиля` VARCHAR(35) NOT NULL,
+	`Модель автомобиля` CHAR(35) NOT NULL,
 	PRIMARY KEY(`Гос.номер`),
 	FOREIGN KEY(`Модель автомобиля`) 
 	REFERENCES `Марки автомобилей`(`Модель автомобиля`)
@@ -73,23 +73,31 @@ INSERT INTO `Поездки1`
 	('C865MP750', '2020.02.03', '234000', '011000', 12, 88);
 /* -4- */
 INSERT INTO `Поездки` 
-	(`Гос.номер`, `Дата`, `Время вызова`, `Время завершения`, `Время ожидания у клиента`, `Расстояние`)
-	SELECT * FROM `Поездки1` GROUP BY 1,2;
+	SELECT * FROM `Поездки1`;
 SELECT * FROM `Поездки`;
 /* -5- */ 
-UPDATE `Марки автомобилей` SET `Километра проезда`=`Километра проезда` + `Километра проезда` * 0.1;
+UPDATE `Марки автомобилей` 
+SET `Километра проезда`=`Километра проезда` + `Километра проезда` * 0.1;
 /* -6- */
+START TRANSACTION;
+DELETE FROM `Поездки` WHERE `Гос.номер`='M777KM777';
+DELETE FROM `Поездки1` WHERE `Гос.номер`='M777KM777';
 DELETE FROM `Водители` WHERE `Гос.номер`='M777KM777';
+COMMIT;
 /* -7- */
-DROP TABLE `Поездки1` IF EXISTS;
+DROP TABLE IF EXISTS `Поездки1`;
 /* -8- */
 SELECT `Гос.номер`, `Дата`, `Время вызова` 
 FROM `Поездки` 
-WHERE `Расстояние`  
+INNER JOIN `Водители` 
+ON `Водители`.`Гос.номер`=`Поездки`.`Гос.номер` 
+WHERE `Расстояние`
 BETWEEN 50 AND 80;
 /* -9- */
 
 /* -10- */
 SELECT `Гос.номер`, `ФИО водителя`, `Модель автомобиля`
-FROM ((`Водители` INNER JOIN `Поездки` ON `Водители`.`Гос.номер`=`Поездки`.`Гос.номер`) 
-INNER JOIN `Поездки1` ON `Поездки`.`Гос.номер`=`Поездки1`.`Гос.номер`);  
+FROM `Водители`
+WHERE NOT EXISTS
+(SELECT * FROM `Поездки` WHERE `Водители`.`Гос.номер`=`Гос.номер`); 
+/* -11 */
