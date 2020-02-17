@@ -1,8 +1,6 @@
 DROP DATABASE work_2;
 CREATE DATABASE work_2;
 
-SET foreign_key_checks = 0;
-
 USE work_1;
 DROP TABLE IF EXISTS `Марки автомобилей`;
 DROP TABLE IF EXISTS `Водители`;
@@ -22,7 +20,7 @@ CREATE TABLE `Водители` (
 	PRIMARY KEY(`Гос.номер`),
 	FOREIGN KEY(`Модель автомобиля`) 
 	REFERENCES `Марки автомобилей`(`Модель автомобиля`)
-	ON DELETE NO ACTION ON UPDATE CASCADE
+	ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 CREATE TABLE `Поездки` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
@@ -33,7 +31,7 @@ CREATE TABLE `Поездки` (
 	`Расстояние` INT NOT NULL,
 	FOREIGN KEY(`Гос.номер`) 
 	REFERENCES `Водители`(`Гос.номер`) 
-	ON DELETE NO ACTION ON UPDATE CASCADE
+	ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 CREATE TABLE `Поездки1` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
@@ -43,10 +41,10 @@ CREATE TABLE `Поездки1` (
 	`Время ожидания у клиента` INT NOT NULL,
 	`Расстояние` INT NOT NULL,
 	FOREIGN KEY(`Гос.номер`) 
-	REFERENCES `Поездки`(`Гос.номер`) 
-	ON DELETE NO ACTION ON UPDATE CASCADE
+	REFERENCES `Водители`(`Гос.номер`) 
+	ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-/* -1- */
+/* -3- */
 INSERT INTO `Марки автомобилей` 
 	(`Модель автомобиля`, `Минуты простоя`, `километра проезда`)
 	VALUES
@@ -73,19 +71,25 @@ INSERT INTO `Поездки1`
 	('C865MP750', '2020.02.02', '122000', '134500', 5, 80),
 	('C865MP750', '2020.02.03', '103000', '114500', 10, 45),
 	('C865MP750', '2020.02.03', '234000', '011000', 12, 88);
-/* -2- */
+/* -4- */
 INSERT INTO `Поездки` 
 	(`Гос.номер`, `Дата`, `Время вызова`, `Время завершения`, `Время ожидания у клиента`, `Расстояние`)
 	SELECT * FROM `Поездки1` GROUP BY 1,2;
-/* -3- */
-/* -4- */ 
+SELECT * FROM `Поездки`;
+/* -5- */ 
 UPDATE `Марки автомобилей` SET `Километра проезда`=`Километра проезда` + `Километра проезда` * 0.1;
-/* -5- */
 /* -6- */
-DROP TABLE `Поездки1` IF EXISTS;
+DELETE FROM `Водители` WHERE `Гос.номер`='M777KM777';
 /* -7- */
+DROP TABLE `Поездки1` IF EXISTS;
+/* -8- */
 SELECT `Гос.номер`, `Дата`, `Время вызова` 
 FROM `Поездки` 
 WHERE `Расстояние`  
 BETWEEN 50 AND 80;
-/* -8- */
+/* -9- */
+
+/* -10- */
+SELECT `Гос.номер`, `ФИО водителя`, `Модель автомобиля`
+FROM ((`Водители` INNER JOIN `Поездки` ON `Водители`.`Гос.номер`=`Поездки`.`Гос.номер`) 
+INNER JOIN `Поездки1` ON `Поездки`.`Гос.номер`=`Поездки1`.`Гос.номер`);  
