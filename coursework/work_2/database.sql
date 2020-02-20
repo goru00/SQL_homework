@@ -1,6 +1,6 @@
 DROP DATABASE work_2;
 CREATE DATABASE work_2;
-/* -2- */
+/* -1-2- */
 USE work_2;
 DROP TABLE IF EXISTS `Поездки`;
 DROP TABLE IF EXISTS `Поездки1`;
@@ -20,7 +20,7 @@ CREATE TABLE `Водители` (
 	PRIMARY KEY(`Гос.номер`),
 	FOREIGN KEY(`Модель автомобиля`) 
 	REFERENCES `Марки автомобилей`(`Модель автомобиля`)
-	ON DELETE CASCADE ON UPDATE CASCADE
+	ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 CREATE TABLE `Поездки` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `Поездки` (
 	`Расстояние` INT NOT NULL,
 	FOREIGN KEY(`Гос.номер`) 
 	REFERENCES `Водители`(`Гос.номер`) 
-	ON DELETE CASCADE ON UPDATE CASCADE
+	ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 CREATE TABLE `Поездки1` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `Поездки1` (
 	`Расстояние` INT NOT NULL,
 	FOREIGN KEY(`Гос.номер`) 
 	REFERENCES `Водители`(`Гос.номер`) 
-	ON DELETE CASCADE ON UPDATE CASCADE
+	ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 /* -3- */
 INSERT INTO `Марки автомобилей` 
@@ -77,7 +77,7 @@ INSERT INTO `Поездки`
 SELECT * FROM `Поездки`;
 /* -5- */ 
 UPDATE `Марки автомобилей` 
-SET `Километра проезда`=`Километра проезда` + `Километра проезда` * 0.1;
+SET `Километра проезда`=`Километра проезда` * 1.1;
 /* -6- */
 START TRANSACTION;
 DELETE FROM `Поездки` WHERE `Гос.номер`='M777KM777';
@@ -96,7 +96,7 @@ SET @INDEX='C865MP750';
 SELECT `Водители`.`Гос.номер`, 
 	`Водители`.`ФИО водителя`, 
 	`Водители`.`Модель автомобиля`, 
-	`Марки автомобилей`.`Километра проезда`, 
+	`Марки автомобилей`.`Километра проезда`, /* Стоимость */
 	`Поездки`.`Дата`, 
 	`Поездки`.`Время вызова`,
 	`Поездки`.`Расстояние`
