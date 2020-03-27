@@ -70,7 +70,7 @@ CREATE FUNCTION getSummary(name_driver VARCHAR(36))
 RETURNS INT
 DETERMINISTIC
 BEGIN
-	DECLARE SUMMARY INT DEFAULT 0;
+	DECLARE SUMMARY INT;
 	SELECT SUM(`Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`) AS `Суммарная выручка`
 	INTO SUMMARY
 	FROM `Марки автомобилей`
@@ -103,9 +103,9 @@ DELIMITER $$
 CREATE PROCEDURE `setCursor`()
 BEGIN
 	DECLARE name_driver VARCHAR(36);
-	DECLARE SUMMARY, base INT DEFAULT 0;
+	DECLARE SUMMARY, base INT;
 	DECLARE cursor1 CURSOR FOR
-	SELECT `Гос.номер`,
+	SELECT `Поездки`.`Гос.номер`,
 		SUM(`Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`) AS `Суммарная выручка`
 	FROM `Марки автомобилей`
 	INNER JOIN `Водители` 
@@ -115,8 +115,6 @@ BEGIN
 	GROUP BY `Поездки`.`Гос.номер`;
 	DECLARE CONTINUE HANDLER
 	FOR NOT FOUND SET base = 1;
-	UPDATE `Водители`
-	SET `Итоговая выручка` = 0;
 	OPEN cursor1;
 	WHILE base = 0 DO
 		FETCH cursor1 INTO name_driver, SUMMARY;
@@ -127,7 +125,7 @@ BEGIN
 END$$  
 DELIMITER ;
 
-CALL setSummary();
+CALL setCursor();
 SELECT * FROM `Водители`;
 
 INSERT INTO `Поездки`
@@ -180,7 +178,9 @@ CREATE USER 'visitor'@'localhost';
 
 /* -9- */
 GRANT ALL PRIVILEGES ON `WORK_3`.* 
-TO 'administrator'@'localhost' WITH GRANT OPTION;
+TO 'administrator'@'localhost';
+REVOKE CREATE, DROP ON `WORK_3`.* 
+FROM 'administrator'@'localhost';
 
 FLUSH PRIVILEGES;
 
@@ -201,12 +201,6 @@ GRANT INSERT, SELECT ON `WORK_3`.`Водители`
 TO 'worker'@'localhost';
 GRANT UPDATE(`Время ожидания у клиента`, `Расстояние`), INSERT, SELECT ON `WORK_3`.`Поездки` 
 TO 'worker'@'localhost';
-
-/* Пояснение */
-/* если через REVOKE отнять права доступа к двум столбцам
-   то будет ошибка 1147
-   поэтому я просто выдаю права на обновление столбцу Модель автомобиля
-*/
 
 FLUSH PRIVILEGES;
 
