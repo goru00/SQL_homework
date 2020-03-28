@@ -67,7 +67,7 @@ INSERT INTO `Поездки`
 
 /* -2- */
 DELIMITER $$
-CREATE FUNCTION getSummary(car_number VARCHAR(36)) 
+CREATE FUNCTION getSummary(car_number VARCHAR(12)) 
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -103,9 +103,9 @@ SELECT * FROM `Водители`;
 DELIMITER $$
 CREATE PROCEDURE `setCursor`()
 BEGIN
-	DECLARE car_number VARCHAR(36);
+	DECLARE car_number VARCHAR(12);
 	DECLARE SUMMARY, base INT DEFAULT 0;
-	DECLARE cursor1 CURSOR FOR SELECT `Водители`.`ФИО водителя`,
+	DECLARE cursor1 CURSOR FOR SELECT `Водители`.`Гос.номер`,
 		SUM(`Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`) AS `Суммарная выручка`
 	FROM `Марки автомобилей`
 	INNER JOIN `Водители` 
@@ -120,7 +120,7 @@ BEGIN
 	WHILE base = 0 DO
 		FETCH cursor1 INTO car_number, SUMMARY;
 		UPDATE `Водители` SET `Итоговая выручка` = SUMMARY
-		WHERE `ФИО водителя` = car_number;
+		WHERE `Гос.номер` = car_number;
 	END WHILE;
 	CLOSE cursor1;
 END$$  
