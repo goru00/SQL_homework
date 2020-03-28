@@ -2,6 +2,7 @@ DROP DATABASE WORK_3;
 CREATE DATABASE WORK_3;
 USE WORK_3;
 
+DROP TRIGGER IF EXISTS `insertTrack`;
 DROP TRIGGER IF EXISTS `deleteTrack`;
 DROP TRIGGER IF EXISTS `updateTrack`;
 DROP FUNCTION IF EXISTS `getSummary`;
@@ -20,7 +21,7 @@ CREATE TABLE `Марки автомобилей` (
 
 CREATE TABLE `Водители` (
 	`Гос.номер` VARCHAR(12) NOT NULL,
-	`ФИО Водителя` VARCHAR(36) NOT NULL,
+	`ФИО водителя` VARCHAR(36) NOT NULL,
 	`Телефон` CHAR(16) NOT NULL,
 	`Модель автомобиля` CHAR(35) NOT NULL,
 	`Итоговая выручка` INT NOT NULL,
@@ -66,7 +67,7 @@ INSERT INTO `Поездки`
 
 /* -2- */
 DELIMITER $$
-CREATE FUNCTION getSummary(name_driver VARCHAR(36)) 
+CREATE FUNCTION getSummary(car_number VARCHAR(36)) 
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -78,20 +79,20 @@ BEGIN
 	ON `Водители`.`Модель автомобиля`=`Марки автомобилей`.`Модель автомобиля`
 	INNER JOIN `Поездки`
 	ON `Поездки`.`Гос.номер`=`Водители`.`Гос.номер`
-	WHERE `Водители`.`ФИО водителя`= name_driver
+	WHERE `Водители`.`Гос.номер`= car_number
 	GROUP BY `Поездки`.`Гос.номер`;
 	RETURN IFNULL(SUMMARY, 0);
 END$$
 DELIMITER ;
 
 SELECT * FROM `Поездки`;
-SELECT getSummary('Иванов Петр Васильевич') AS `Суммарная выручка`;
+SELECT getSummary('C734XK750') AS `Суммарная выручка`;
 
 /* -3- */
 DELIMITER $$
 CREATE PROCEDURE setSummary()
 BEGIN
-	UPDATE `Водители` SET `Итоговая выручка` = getSummary(`ФИО водителя`);
+	UPDATE `Водители` SET `Итоговая выручка` = getSummary(`Гос.номер`);
 END$$
 DELIMITER ;
 
@@ -102,24 +103,24 @@ SELECT * FROM `Водители`;
 DELIMITER $$
 CREATE PROCEDURE `setCursor`()
 BEGIN
-	DECLARE name_driver VARCHAR(36);
-	DECLARE SUMMARY, base INT;
-	DECLARE cursor1 CURSOR FOR
-	SELECT `Поездки`.`Гос.номер`,
+	DECLARE car_number VARCHAR(36);
+	DECLARE SUMMARY, base INT DEFAULT 0;
+	DECLARE cursor1 CURSOR FOR SELECT `Водители`.`ФИО водителя`,
 		SUM(`Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`) AS `Суммарная выручка`
 	FROM `Марки автомобилей`
 	INNER JOIN `Водители` 
 	ON `Водители`.`Модель автомобиля` = `Марки автомобилей`.`Модель автомобиля`
 	INNER JOIN `Поездки`
 	ON `Поездки`.`Гос.номер` = `Водители`.`Гос.номер`
-	GROUP BY `Поездки`.`Гос.номер`;
-	DECLARE CONTINUE HANDLER
-	FOR NOT FOUND SET base = 1;
+	GROUP BY `Водители`.`Гос.номер`;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET base = 1;
+	UPDATE `Водители` 
+	SET `Итоговая выручка` = 0;
 	OPEN cursor1;
 	WHILE base = 0 DO
-		FETCH cursor1 INTO name_driver, SUMMARY;
+		FETCH cursor1 INTO car_number, SUMMARY;
 		UPDATE `Водители` SET `Итоговая выручка` = SUMMARY
-		WHERE `ФИО водителя` = name_driver;
+		WHERE `ФИО водителя` = car_number;
 	END WHILE;
 	CLOSE cursor1;
 END$$  
@@ -128,26 +129,38 @@ DELIMITER ;
 CALL setCursor();
 SELECT * FROM `Водители`;
 
-INSERT INTO `Поездки`
-	(`Гос.номер`, `Дата`, `Время вызова`, `Время завершения`, `Время ожидания у клиента`, `Расстояние`)
-	VALUES
-	('M777KM777', '2020.02.03', '18:35:00', '20:22:00', 6, 85);
-SELECT * FROM `Поездки`;
-SELECT * FROM `Водители`;
-
-/* -6- */
 DELIMITER $$
 CREATE TRIGGER `deleteTrack` 
 AFTER DELETE ON `Поездки` FOR EACH ROW
 BEGIN
 	UPDATE `Водители` 
-	SET `Итоговая выручка` = `Итоговая выручка` - `Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`
+	SET `Итоговая выручка` = `Итоговая выручка` - getSummary(`Гос.номер`)
 	WHERE `Гос.номер` = OLD.`Гос.номер`;
 END$$
 DELIMITER ;
 
 DELETE FROM `Поездки` WHERE `Гос.номер` = 'C734XK750'
-AND `Время ожидания у клиента` = 2;
+AND `Время ожидания у клиента` = 2
+AND `Расстояние` = 90;
+SELECT * FROM `Поездки`;
+SELECT * FROM `Водители`;
+
+/* -6- */
+
+DELIMITER $$
+CREATE TRIGGER `insertTrack`
+AFTER INSERT ON `Поездки` FOR EACH ROW
+BEGIN 
+	UPDATE `Водители` 
+	SET `Итоговая выручка` = getSummary(`Гос.номер`)
+	WHERE `Гос.номер` = NEW.`Гос.номер`;
+END$$
+DELIMITER ;
+
+INSERT INTO `Поездки`
+	(`Гос.номер`, `Дата`, `Время вызова`, `Время завершения`, `Время ожидания у клиента`, `Расстояние`)
+	VALUES
+	('M777KM777', '2020.02.03', '18:35:00', '20:25:00', 6, 75);
 SELECT * FROM `Поездки`;
 SELECT * FROM `Водители`;
 
@@ -156,14 +169,20 @@ DELIMITER $$
 CREATE TRIGGER `updateTrack`
 AFTER UPDATE ON `Поездки` FOR EACH ROW
 BEGIN
-	if OLD.`Гос.номер` != NEW.`Гос.номер` then
-		UPDATE `Водители` SET `Итоговая выручка` = `Итоговая выручка` - `Время ожидания у клиента` * `Минуты простоя` + `Километра проезда` * `Расстояние`
+	if OLD.`Гос.номер` != NEW.`Гос.номер` THEN
+		UPDATE `Водители` SET `Итоговая выручка` = `Итоговая выручка` - getSummary(`Гос.номер`)
 		WHERE `Гос.номер` = OLD.`Гос.номер`;
 		UPDATE `Водители` SET `Итоговая выручка` = getSummary(`Гос.номер`)
 		WHERE `Гос.номер` = NEW.`Гос.номер`;
 	END IF;
 END$$
 DELIMITER ;
+
+UPDATE `Поездки`
+SET `Время ожидания у клиента` = 5, `Расстояние` = 45
+WHERE `Гос.номер` = `C734XK750` AND `Время ожидания у клиента` = 2
+AND `Расстояние` = 90;
+SELECT * FROM `Водители`;
 
 /* -8- */
 DROP USER 'administrator'@'localhost';
