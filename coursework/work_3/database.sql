@@ -146,7 +146,6 @@ SELECT * FROM `Поездки`;
 SELECT * FROM `Водители`;
 
 /* -6- */
-
 DELIMITER $$
 CREATE TRIGGER `insertTrack`
 AFTER INSERT ON `Поездки` FOR EACH ROW
@@ -197,9 +196,7 @@ CREATE USER 'visitor'@'localhost';
 
 /* -9- */
 GRANT ALL PRIVILEGES ON `WORK_3`.* 
-TO 'administrator'@'localhost';
-REVOKE CREATE, DROP ON `WORK_3`.* 
-FROM 'administrator'@'localhost';
+TO 'administrator'@'localhost' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 
